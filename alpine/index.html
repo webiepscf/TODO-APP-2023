@@ -10,7 +10,13 @@
     <section
       class="todoapp"
       x-data="{
-      tasks: JSON.parse(localStorage.tasks)
+      tasks: JSON.parse(localStorage.tasks),
+      newTaskContent: null,
+      addTask () {
+        this.tasks.unshift({id: new Date().valueOf(), content:this.newTaskContent, completed: false}); 
+        localStorage.tasks = JSON.stringify(this.tasks); 
+        this.newTaskContent = null;
+      }
     }"
     >
       <header class="header">
@@ -19,6 +25,8 @@
           class="new-todo"
           placeholder="What needs to be done?"
           autofocus
+          x-model="newTaskContent"
+          @keyup.enter="addTask"
         />
       </header>
       <section class="main">
