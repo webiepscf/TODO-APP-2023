@@ -7,6 +7,8 @@
 // {id:xxx, content: 'xx', completed:xxx}
 function getTaskDomElement (task) {
     const li = document.createElement("li");
+    // J'ajoute le data-id avec l'ide de la task
+    li.dataset.id = task.id;
     if (task.completed) {
         li.classList.add('completed');
     } 
@@ -59,3 +61,41 @@ document.querySelector(".new-todo").addEventListener("keyup",function (e){
         this.value = '';
     }
 });
+    
+// TERMINER UNE TÂCHE ------------------------------------------
+// Quand on change le checkbox
+// 1. On ajoute ou on supprime la classe 'completed' sur le li correspondant (toggle)
+// 2. On Modifie la task dans le tasks (true/false)
+// 3. on écrase le localStorage.tasks
+
+// Capture par sélection
+// document.querySelectorAll(".toggle").forEach(trigger => {
+//     trigger.addEventListener('change', function() {
+//         this.closest('li').classList.toggle("completed");
+//     })
+// });
+
+// Capture par délégation
+document.addEventListener('change', (e) => {
+    if (e.target.matches('.toggle')) {
+        e.target.closest('li').classList.toggle("completed");
+        // On récupère l'id dans le li
+        const id = e.target.closest('li').dataset.id;
+
+        // On récupère dans le tableau tasks la task qui correspond à l'id
+        const task = tasks.find(task => task.id == id);
+        task.completed = !task.completed;
+
+        // J'écrase le localStorage.tasks
+        localStorage.tasks = JSON.stringify(tasks);
+
+    }
+});
+
+
+// SUPPRIMER UNE TASK
+// 1. Quand on click sur un .destroy
+// 2. On va chercher l'ID
+// 3. On vire la task du tableau tasks
+// 4. On vire le li du DOM (remove)
+// 5. Onb écrase le localstorage.tasks
