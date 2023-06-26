@@ -98,4 +98,25 @@ document.addEventListener('change', (e) => {
 // 2. On va chercher l'ID
 // 3. On vire la task du tableau tasks
 // 4. On vire le li du DOM (remove)
-// 5. Onb écrase le localstorage.tasks
+// 5. On écrase le localstorage.tasks
+
+document.querySelector('.todo-list').addEventListener('click', (e) => {
+    if (e.target.matches('.destroy')) {
+        const id = Number(e.target.closest('li').dataset.id);
+
+        // Solution 1
+        // let index = tasks.findIndex(task => task.id === id);
+        // if (index !== -1) {
+        //  tasks.splice(index, 1);
+        // }
+
+        // Solution 2
+        tasks = tasks.filter(task => task.id !== id);
+
+        // Je vire le li du DOM
+        e.target.closest('li').remove();
+
+        // J'actualise le localStorage
+        localStorage.tasks = JSON.stringify(tasks);
+    }
+});
