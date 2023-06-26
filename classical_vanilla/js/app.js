@@ -130,3 +130,27 @@ function renderNotCompletedCount() {
     document.querySelector('.todo-count span').innerText = tasks.filter(task => !task.completed).length;
 }
 renderNotCompletedCount();
+
+// MODIFICATION D'UNE TASK
+// ETAPE 1: l'input
+    document.querySelector('.todo-list').addEventListener('dblclick', (e) => {
+        if (e.target.matches('.view label')) {
+            e.target.innerHTML = `<input type="text" value="${e.target.innerText}" class="editInput" />`;
+        }
+    });
+
+    // ETAPE 2: Le change
+    document.querySelector('.todo-list').addEventListener('change', (e) => {
+        if (e.target.matches('.view .editInput')) {
+            const id = e.target.closest('li').dataset.id;
+            const value = e.target.value;
+            e.target.closest('label').innerHTML = value;
+
+            // On récupère dans le tableau tasks la task qui correspond à l'id
+            const task = tasks.find(task => task.id == id);
+            task.content = value;
+
+            // J'écrase le localStorage.tasks
+            localStorage.tasks = JSON.stringify(tasks);
+        }
+    });
