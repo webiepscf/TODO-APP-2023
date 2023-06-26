@@ -29,7 +29,7 @@ function getTaskDomElement (task) {
 
 // 2. Afficher les tasks dans le DOM
 const ul = document.querySelector(".todo-list");
-const tasks = JSON.parse(localStorage.tasks);
+let tasks = JSON.parse(localStorage.tasks);
 tasks.forEach(task => {
   ul.appendChild(getTaskDomElement(task));
 });
@@ -59,6 +59,9 @@ document.querySelector(".new-todo").addEventListener("keyup",function (e){
 
         // 5. Vider le champs
         this.value = '';
+
+        // 6. J'actualise le nombre de tasks restantes
+        renderNotCompletedCount();
     }
 });
     
@@ -89,6 +92,9 @@ document.addEventListener('change', (e) => {
         // J'écrase le localStorage.tasks
         localStorage.tasks = JSON.stringify(tasks);
 
+        // J'actualise le nombre de tasks restantes
+        renderNotCompletedCount();
+
     }
 });
 
@@ -102,21 +108,25 @@ document.addEventListener('change', (e) => {
 
 document.querySelector('.todo-list').addEventListener('click', (e) => {
     if (e.target.matches('.destroy')) {
-        const id = Number(e.target.closest('li').dataset.id);
+        const li = e.target.closest('li');
+        const id = Number(li.dataset.id);
 
-        // Solution 1
-        // let index = tasks.findIndex(task => task.id === id);
-        // if (index !== -1) {
-        //  tasks.splice(index, 1);
-        // }
-
-        // Solution 2
+        // Je vire la task du tableau tasks
         tasks = tasks.filter(task => task.id !== id);
 
         // Je vire le li du DOM
-        e.target.closest('li').remove();
+        li.remove();
 
         // J'actualise le localStorage
         localStorage.tasks = JSON.stringify(tasks);
+
+        // J'actualise le nombre de tasks restantes
+        renderNotCompletedCount();
     }
 });
+
+// Affichage du nombre de tasks restantes
+function renderNotCompletedCount() {
+    document.querySelector('.todo-count span').innerText = tasks.filter(task => !task.completed).length;
+}
+renderNotCompletedCount();
